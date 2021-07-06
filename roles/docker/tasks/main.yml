@@ -1,0 +1,56 @@
+---
+
+- name: install packages
+  apt:
+    update_cache: yes
+    pkg:
+     - apt-transport-https
+     - ca-certificates
+     - curl
+     - gnupg2
+     - software-properties-common
+     - python-pip
+     - python-backports.ssl-match-hostname
+     - python3-venv 
+     - python3-pip
+
+- name: install docker-py 
+  pip: 
+    name: docker-py
+
+- name: add repo key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: add docker repo
+  apt_repository:
+    repo: deb https://download.docker.com/linux/debian buster stable
+    state: present
+
+- name: Install docker-ce
+  apt:
+    update_cache: yes
+    name: docker-ce
+    state: latest
+
+- name: Make dir for app
+  file:
+    path: "{{ app_path }}"
+    state: directory
+
+- name: Copy files for app
+  copy:
+    src: files/flask/
+    dest: "{{ app_path }}/flask"
+
+- name: Make tempale for compose
+  template:
+    src: template/docker-compose.yml.j2
+    dest: "{{ app_path }}/docker-compose.yml"
+
+- name: Start app     
+#  docker_compose:
+#    project_src: "{{ app_path }}"
+  shell: 'docker-compose -f "{{ app_path }}"/docker-compose.yml up -d'
+
