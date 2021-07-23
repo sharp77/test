@@ -7,7 +7,7 @@
 #   - Groups of hosts are delimited by [header] elements
 #   - You can enter hostnames or ip addresses
 #   - A hostname/ip can be a member of multiple groups
-10.16.4.94
+10.16.4.94 ansible_python_interpreter=/usr/bin/python3
 
 # Ex 1: Ungrouped hosts, specify before any group headers.
 
